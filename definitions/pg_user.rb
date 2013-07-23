@@ -36,6 +36,21 @@ define :pg_user, :action => :create do
       not_if exists, :user => "postgres"
     end
 
+    if params[:grants]
+      execute "update grant options for pg user #{params[:name]}" do
+        user "postgres"
+        only_if exists, :user => "postgres"
+
+        params[:grants].each do |schema,privileges|
+          if privileges.is_a? Array
+            privileges = privilege.join(',')
+          end
+
+          command "psql -c \"GRANT #{privilege} ON ALL TABLES IN SCHEMA #{schema} TO #{params[:name]}\""
+        end
+      end
+    end
+
   when :drop
     execute "dropping pg user #{params[:name]}" do
       user "postgres"
