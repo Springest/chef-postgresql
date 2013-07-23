@@ -154,10 +154,11 @@ shared_buffers = <%= node["postgres"]["shared_buffers"] %>     # min 128kB
 
 # - Settings -
 
-#wal_level = <%= node["postgres"]["wal_level"] %>      # minimal, archive, or hot_standby
-          # (change requires restart)
+<% if node["postgres"]["replication"].any? %>
+wal_level = <%= node["postgres"]["wal_level"] %>      # minimal, archive, or hot_standby
+<% end %>
 #fsync = <%= node["postgres"]["fsync"] %>       # turns forced synchronization on or off
-#synchronous_commit = <%= node["postgres"]["synchronous_commit"] %>    # synchronization level; on, off, or local
+synchronous_commit = <%= node["postgres"]["synchronous_commit"] %>    # synchronization level; on, off, or local
 #wal_sync_method = <%= node["postgres"]["wal_sync_method"] %>    # the default is the first option
           # supported by the operating system:
           #   open_datasync
@@ -182,12 +183,11 @@ shared_buffers = <%= node["postgres"]["shared_buffers"] %>     # min 128kB
 
 # - Archiving -
 
-#archive_mode = <%= node["postgres"]["archive_mode"] %>   # allows archiving to be done
-        # (change requires restart)
-#archive_command = '<%= node["postgres"]["archive_command"] %>'   # command to use to archive a logfile segment
-#archive_timeout = <%= node["postgres"]["archive_timeout"] %>    # force a logfile segment switch after this
-        # number of seconds; 0 disables
-
+<% if node["postgres"]["replication"].any? %>
+archive_mode = <%= node["postgres"]["archive_mode"] %>   # allows archiving to be done (change requires restart)
+archive_command = '<%= node["postgres"]["archive_command"] %>'   # command to use to archive a logfile segment
+archive_timeout = <%= node["postgres"]["archive_timeout"] %>    # force a logfile segment switch after this number of seconds; 0 disables
+<% end %>
 
 #------------------------------------------------------------------------------
 # REPLICATION
@@ -197,32 +197,31 @@ shared_buffers = <%= node["postgres"]["shared_buffers"] %>     # min 128kB
 
 # These settings are ignored on a standby server
 
-#max_wal_senders = <%= node["postgres"]["max_wal_senders"] %>    # max number of walsender processes
-        # (change requires restart)
-#wal_sender_delay = <%= node["postgres"]["wal_sender_delay"] %>    # walsender cycle time, 1-10000 milliseconds
-#wal_keep_segments = <%= node["postgres"]["wal_keep_segments"] %>    # in logfile segments, 16MB each; 0 disables
-#vacuum_defer_cleanup_age = <%= node["postgres"]["vacuum_defer_cleanup_age"] %> # number of xacts by which cleanup is delayed
-#replication_timeout = <%= node["postgres"]["replication_timeout"] %>  # in milliseconds; 0 disables
-#synchronous_standby_names = '<%= node["postgres"]["synchronous_standby_names"] %>' # standby servers that provide sync rep
-        # comma-separated list of application_name
-        # from standby(s); '*' = all
+<% if node["postgres"]["replication"].any? %>
+max_wal_senders = <%= node["postgres"]["max_wal_senders"] %>    # max number of walsender processes
+# wal_sender_delay = <%= node["postgres"]["wal_sender_delay"] %>    # walsender cycle time, 1-10000 milliseconds
+wal_keep_segments = <%= node["postgres"]["wal_keep_segments"] %>    # in logfile segments, 16MB each; 0 disables
+vacuum_defer_cleanup_age = <%= node["postgres"]["vacuum_defer_cleanup_age"] %> # number of xacts by which cleanup is delayed
+replication_timeout = <%= node["postgres"]["replication_timeout"] %>  # in milliseconds; 0 disables
+synchronous_standby_names = '<%= node["postgres"]["synchronous_standby_names"] %>' # standby servers that provide sync rep
+# comma-separated list of application_name
+# from standby(s); '*' = all
 
 # - Standby Servers -
 
 # These settings are ignored on a master server
 
-#hot_standby = <%= node["postgres"]["hot_standby"] %>      # "on" allows queries during recovery
-          # (change requires restart)
-#max_standby_archive_delay = <%= node["postgres"]["max_standby_archive_delay"] %>  # max delay before canceling queries
-          # when reading WAL from archive;
-          # -1 allows indefinite delay
-#max_standby_streaming_delay = <%= node["postgres"]["max_standby_streaming_delay"] %>  # max delay before canceling queries
-          # when reading streaming WAL;
-          # -1 allows indefinite delay
-#wal_receiver_status_interval = <%= node["postgres"]["wal_receiver_status_interval"] %> # send replies at least this often
-          # 0 disables
-#hot_standby_feedback = <%= node["postgres"]["hot_standby_feedback"] %>   # send info from standby to prevent
-          # query conflicts
+hot_standby = <%= node["postgres"]["hot_standby"] %>      # "on" allows queries during recovery (change requires restart)
+max_standby_archive_delay = <%= node["postgres"]["max_standby_archive_delay"] %>  # max delay before canceling queries
+# when reading WAL from archive;
+# -1 allows indefinite delay
+max_standby_streaming_delay = <%= node["postgres"]["max_standby_streaming_delay"] %>  # max delay before canceling queries
+# when reading streaming WAL;
+# -1 allows indefinite delay
+wal_receiver_status_interval = <%= node["postgres"]["wal_receiver_status_interval"] %> # send replies at least this often, 0 disables
+hot_standby_feedback = <%= node["postgres"]["hot_standby_feedback"] %>   # send info from standby to prevent query conflicts
+<% end %>
+
 
 
 #------------------------------------------------------------------------------

@@ -99,7 +99,8 @@ host    all             all             ::1/128                 md5
 #host    replication     postgres        ::1/128                 md5
 <% end %>
 
-<% if node["postgres"]["replicator"] %>
-local   replication    <%= node["postgres"]["replicator"]["user"] %>                                                     trust %>
-host    replication    <%= node["postgres"]["replicator"]["user"] %>    <%= node["postgres"]["replicator"]["host"] %>    trust %>
+<% if node["postgres"]["replication"]["user"] %>
+local   replication    <%= node["postgres"]["replication"]["user"] %>    trust
+host    replication    <%= node["postgres"]["replication"]["user"] %>    <%= node["postgres"]["replication"]["slave"] %>   18    trust
+host    replication    <%= node["postgres"]["replication"]["user"] %>    <%= node["postgres"]["replication"]["master"] %>  18    trust
 <% end %>

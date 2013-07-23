@@ -43,10 +43,14 @@ define :pg_user, :action => :create do
 
         params[:grants].each do |schema,privileges|
           if privileges.is_a? Array
-            privileges = privilege.join(',')
+            privileges = privileges.join(',')
           end
 
-          command "psql -c \"GRANT #{privilege} ON ALL TABLES IN SCHEMA #{schema} TO #{params[:name]}\""
+          if privileges == "USAGE"
+            command "psql -c \"GRANT #{privileges} ON SCHEMA #{schema} TO #{params[:name]}\""
+          else
+            command "psql -c \"GRANT #{privileges} ON ALL TABLES IN SCHEMA #{schema} TO #{params[:name]}\""
+          end
         end
       end
     end
