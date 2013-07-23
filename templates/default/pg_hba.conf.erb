@@ -98,3 +98,8 @@ host    all             all             ::1/128                 md5
 #host    replication     postgres        127.0.0.1/32            md5
 #host    replication     postgres        ::1/128                 md5
 <% end %>
+
+<% if node['postgresql']['replicator'] %>
+local   replication    <%= node['postgresql']['replicator']['user'] %>                                                       trust %>
+host    replication    <%= node['postgresql']['replicator']['user'] %>    <%= node['postgresql']['replicator']['host'] %>    trust %>
+<% end %>
