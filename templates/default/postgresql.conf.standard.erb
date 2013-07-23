@@ -110,8 +110,7 @@ ssl_key_file = '<%= node["postgres"]["ssl_key_file"] %>'   # (change requires re
 
 # - Memory -
 
-shared_buffers = <%= node["postgres"]["shared_buffers"] %>     # min 128kB
-          # (change requires restart)
+shared_buffers = <%= node["postgres"]["shared_buffers"] %>     # min 128kB (change requires restart)
 #temp_buffers = <%= node["postgres"]["temp_buffers"] %>     # min 800kB
 #max_prepared_transactions = <%= node["postgres"]["max_prepared_transactions"] %>    # zero disables the feature
           # (change requires restart)
@@ -119,8 +118,8 @@ shared_buffers = <%= node["postgres"]["shared_buffers"] %>     # min 128kB
 # per transaction slot, plus lock space (see max_locks_per_transaction).
 # It is not advisable to set max_prepared_transactions nonzero unless you
 # actively intend to use prepared transactions.
-#work_mem = <%= node["postgres"]["work_mem"] %>       # min 64kB
-#maintenance_work_mem = <%= node["postgres"]["maintenance_work_mem"] %>    # min 1MB
+work_mem = <%= node["postgres"]["work_mem"] %>       # min 64kB
+maintenance_work_mem = <%= node["postgres"]["maintenance_work_mem"] %>       # min 1MB
 #max_stack_depth = <%= node["postgres"]["max_stack_depth"] %>      # min 100kB
 
 # - Kernel Resource Usage -
@@ -167,7 +166,7 @@ synchronous_commit = <%= node["postgres"]["synchronous_commit"] %>    # synchron
           #   fsync_writethrough
           #   open_sync
 #full_page_writes = <%= node["postgres"]["full_page_writes"] %>      # recover from partial page writes
-#wal_buffers = <%= node["postgres"]["wal_buffers"] %>     # min 32kB, -1 sets based on shared_buffers
+wal_buffers = <%= node["postgres"]["wal_buffers"] %>     # min 32kB, -1 sets based on shared_buffers
           # (change requires restart)
 #wal_writer_delay = <%= node["postgres"]["wal_writer_delay"] %>   # 1-10000 milliseconds
 
@@ -176,9 +175,9 @@ synchronous_commit = <%= node["postgres"]["synchronous_commit"] %>    # synchron
 
 # - Checkpoints -
 
-#checkpoint_segments = <%= node["postgres"]["checkpoint_segments"] %>    # in logfile segments, min 1, 16MB each
+checkpoint_segments = <%= node["postgres"]["checkpoint_segments"] %>    # in logfile segments, min 1, 16MB each
 #checkpoint_timeout = <%= node["postgres"]["checkpoint_timeout"] %>    # range 30s-1h
-#checkpoint_completion_target = <%= node["postgres"]["checkpoint_completion_target"] %> # checkpoint target duration, 0.0 - 1.0
+checkpoint_completion_target = <%= node["postgres"]["checkpoint_completion_target"] %> # checkpoint target duration, 0.0 - 1.0
 #checkpoint_warning = <%= node["postgres"]["checkpoint_warning"] %>   # 0 disables
 
 # - Archiving -
@@ -244,11 +243,11 @@ hot_standby_feedback = <%= node["postgres"]["hot_standby_feedback"] %>   # send 
 # - Planner Cost Constants -
 
 #seq_page_cost = <%= node["postgres"]["seq_page_cost"] %>      # measured on an arbitrary scale
-#random_page_cost = <%= node["postgres"]["random_page_cost"] %>     # same scale as above
+random_page_cost = <%= node["postgres"]["random_page_cost"] %>     # same scale as above
 #cpu_tuple_cost = <%= node["postgres"]["cpu_tuple_cost"] %>      # same scale as above
 #cpu_index_tuple_cost = <%= node["postgres"]["cpu_index_tuple_cost"] %>   # same scale as above
 #cpu_operator_cost = <%= node["postgres"]["cpu_operator_cost"] %>   # same scale as above
-#effective_cache_size = <%= node["postgres"]["effective_cache_size"] %>
+effective_cache_size = <%= node["postgres"]["effective_cache_size"] %>
 
 # - Genetic Query Optimizer -
 
