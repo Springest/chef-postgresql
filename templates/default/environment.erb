@@ -6,6 +6,6 @@
 # numbers, and '-', '_', '.' in single quotes. Shell commands are not
 # evaluated.
 
-<% node["postgresql"]["environment_variables"].each_pair do |k, v| %>
+<% node["postgres"]["environment_variables"].each_pair do |k, v| %>
 <%= "#{k} = #{v}" %>
 <% end %>

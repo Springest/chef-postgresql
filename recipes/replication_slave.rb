@@ -1,12 +1,12 @@
-include_recipe "postgresql::replication"
+include_recipe "postgres::replication"
 
-template "/etc/postgresql/#{node["postgresql"]["version"]}/main/recovery.conf" do
+template "/etc/postgresql/#{node["postgres"]["version"]}/main/recovery.conf" do
   action :create
   owner 'postgres'
   group 'postgres'
 end
 
-directory "/var/lib/postgresql/#{node["postgresql"]["version"]}/archive/" do
+directory "/var/lib/postgresql/#{node["postgres"]["version"]}/archive/" do
   action :create
   owner 'postgres'
   group 'postgres'

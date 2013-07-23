@@ -1,9 +1,9 @@
 #
-# Cookbook Name:: postgresql
+# Cookbook Name:: postgres
 # Recipe:: libpq
 #
 
-include_recipe "postgresql"
+include_recipe "postgres"
 
 package "libpq5"
 package "libpq-dev"

@@ -41,6 +41,6 @@
 
 # MAPNAME       SYSTEM-USERNAME         PG-USERNAME
 
-<% node["postgresql"]["pg_ident"].each do |ident| %>
+<% node["postgres"]["pg_ident"].each do |ident| %>
 <%= ident %>
 <% end %>

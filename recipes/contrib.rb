@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: postgresql
+# Cookbook Name:: postgres
 # Recipe:: contrib
 #
 
-include_recipe "postgresql"
+include_recipe "postgres"
 
-package "postgresql-contrib-#{node["postgresql"]["version"]}"
+package "postgresql-contrib-#{node["postgres"]["version"]}"

@@ -1,9 +1,9 @@
 #
-# Cookbook Name:: postgresql
+# Cookbook Name:: postgres
 # Recipe:: server_dev
 #
 
-include_recipe "postgresql"
+include_recipe "postgres"
 
 # install the package
-package "postgresql-server-dev-#{node["postgresql"]["version"]}"
+package "postgresql-server-dev-#{node["postgres"]["version"]}"

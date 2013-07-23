@@ -1,1 +1,1 @@
-include_recipe "postgresql::server"
+include_recipe "postgres::server"

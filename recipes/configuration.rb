@@ -1,10 +1,10 @@
 #
-# Cookbook Name:: postgresql
+# Cookbook Name:: postgres
 # Recipe:: configuration
 #
 
 
-pg_version = node["postgresql"]["version"]
+pg_version = node["postgres"]["version"]
 
 # environment
 template "/etc/postgresql/#{pg_version}/main/environment" do
@@ -25,7 +25,7 @@ template "/etc/postgresql/#{pg_version}/main/pg_ctl.conf" do
 end
 
 # pg_hba
-template node["postgresql"]["hba_file"] do
+template node["postgres"]["hba_file"] do
   source "pg_hba.conf.erb"
   owner  "postgres"
   group  "postgres"
@@ -34,7 +34,7 @@ template node["postgresql"]["hba_file"] do
 end
 
 # pg_ident
-template node["postgresql"]["ident_file"] do
+template node["postgres"]["ident_file"] do
   source "pg_ident.conf.erb"
   owner  "postgres"
   group  "postgres"
@@ -43,13 +43,13 @@ template node["postgresql"]["ident_file"] do
 end
 
 # postgresql
-pg_template_source = node["postgresql"]["conf"].any? ? "custom" : "standard"
+pg_template_source = node["postgres"]["conf"].any? ? "custom" : "standard"
 template "/etc/postgresql/#{pg_version}/main/postgresql.conf" do
   source "postgresql.conf.#{pg_template_source}.erb"
   owner  "postgres"
   group  "postgres"
   mode   "0644"
-  variables(:configuration => node["postgresql"]["conf"])
+  variables(:configuration => node["postgres"]["conf"])
   notifies :restart, "service[postgresql]"
 end
 

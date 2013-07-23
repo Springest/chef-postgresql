@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: postgresql
+# Cookbook Name:: postgres
 # Recipe:: client
 #
 
-include_recipe "postgresql"
+include_recipe "postgres"
 
-package "postgresql-client-#{node["postgresql"]["version"]}"
+package "postgresql-client-#{node["postgres"]["version"]}"

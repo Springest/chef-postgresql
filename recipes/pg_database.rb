@@ -1,11 +1,11 @@
 #
-# Cookbook Name:: postgresql
+# Cookbook Name:: postgres
 # Recipe:: pg_database
 #
 
 
 # setup databases
-node["postgresql"]["databases"].each do |database|
+node["postgres"]["databases"].each do |database|
   pg_database database["name"] do
     owner database["owner"]
     encoding database["encoding"]

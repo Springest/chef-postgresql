@@ -5,7 +5,7 @@ define :pg_database_extensions, :action => :create do
   extensions = [params[:extensions] || []].flatten
   postgis = params[:postgis]
 
-  postgresql_version = node["postgresql"]["version"]
+  postgresql_version = node["postgres"]["version"]
   postgis_version = node["postgis"]["version"]
 
   case params[:action]
@@ -25,7 +25,7 @@ define :pg_database_extensions, :action => :create do
     end
 
     if postgis
-      include_recipe 'postgresql::postgis'
+      include_recipe 'postgres::postgis'
 
       execute "psql -d #{dbname} -f /usr/share/postgresql/#{postgresql_version}/contrib/postgis-#{postgis_version}/postgis.sql" do
         user "postgres"

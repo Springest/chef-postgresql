@@ -72,7 +72,7 @@
 # listen on a non-local interface via the listen_addresses
 # configuration parameter, or via the -i or -h command line switches.
 
-<% node["postgresql"]["pg_hba"].each do |hba| %>
+<% node["postgres"]["pg_hba"].each do |hba| %>
 <%= hba['type'] %> <%= hba['db'] %> <%= hba['user'] %> <%= hba['addr'] %> <%= hba['method'] %>
 <% end %>
 
@@ -83,7 +83,7 @@
 # maintenance (custom daily cronjobs, replication, and similar tasks).
 #
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
-<% if node[:postgresql][:pg_hba_defaults] %>
+<% if node["postgres"]["pg_hba_defaults"] %>
 # Database administrative login by Unix domain socket
 local   all             postgres                                peer
 # "local" is for Unix domain socket connections only
@@ -99,7 +99,7 @@ host    all             all             ::1/128                 md5
 #host    replication     postgres        ::1/128                 md5
 <% end %>
 
-<% if node['postgresql']['replicator'] %>
-local   replication    <%= node['postgresql']['replicator']['user'] %>                                                       trust %>
-host    replication    <%= node['postgresql']['replicator']['user'] %>    <%= node['postgresql']['replicator']['host'] %>    trust %>
+<% if node["postgres"]["replicator"] %>
+local   replication    <%= node["postgres"]["replicator"]["user"] %>                                                     trust %>
+host    replication    <%= node["postgres"]["replicator"]["user"] %>    <%= node["postgres"]["replicator"]["host"] %>    trust %>
 <% end %>

@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: postgresql
+# Cookbook Name:: postgres
 # Recipe:: default
 #
 
@@ -11,9 +11,9 @@ end
 
 case node["platform"]
 when "ubuntu"
-  include_recipe "postgresql::apt_repository"
+  include_recipe "postgres::apt_repository"
   package "postgresql-common"  # install common files
 when "debian"
-  include_recipe "postgresql::debian_backports"
-  include_recipe "postgresql::apt_repository"
+  include_recipe "postgres::debian_backports"
+  include_recipe "postgres::apt_repository"
 end
