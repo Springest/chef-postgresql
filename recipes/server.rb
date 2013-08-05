@@ -5,6 +5,8 @@
 
 include_recipe "postgres"
 
+include_recipe "postgres::kernel"
+
 # install the package
 package "postgresql-#{node["postgres"]["version"]}"
 
