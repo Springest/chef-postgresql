@@ -1,9 +1,9 @@
-node.set["postgres"]['archive_command'] = "rsync -aq %p postgres@#{node["postgres"]['replication']['slave']}:/var/lib/postgresql/9.2/archive/%f"
+node.set["postgres"]['archive_command'] = "rsync -aq %p postgres@#{node["postgres"]['replication']['slave']}:#{node['postgres']['archive_directory']}/%f"
 
 include_recipe "postgres::replication"
 
 execute "Recreate cluster" do
-  command "pg_dropcluster --stop #{node["postgres"]["version"]} main && pg_createcluster #{node["postgres"]["initdb_options"]} --start #{node["postgres"]["version"]} -d /var/lib/postgresql/#{node["postgres"]["version"]}/main main && touch /etc/postgresql/postgres_cluster_recreated"
+  command "pg_dropcluster --stop #{node["postgres"]["version"]} main && pg_createcluster #{node["postgres"]["initdb_options"]} --start #{node["postgres"]["version"]} -d #{node["postgres"]["data_directory"]} main && touch /etc/postgresql/postgres_cluster_recreated"
   notifies :restart, "service[postgresql]"
   not_if { File.exists?('/etc/postgresql/postgres_cluster_recreated') }
 end

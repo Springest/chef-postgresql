@@ -9,5 +9,5 @@ trigger_file = '/tmp/pg_failover_trigger'
 
 # Shell command to execute an archived segment of WAL file series. 
 # Required for archive recovery if streaming replication falls behind too far.
-restore_command = 'cp /var/lib/postgresql/9.2/archive/%f %p'
-archive_cleanup_command = 'pg_archivecleanup /var/lib/postgresql/9.2/archive/ %r'
+restore_command = 'cp <%= node['postgres']['archive_directory'] %>/%f %p'
+archive_cleanup_command = 'pg_archivecleanup <%= node['postgres']['archive_directory'] %>/ %r'

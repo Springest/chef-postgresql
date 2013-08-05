@@ -6,7 +6,7 @@ template "/etc/postgresql/#{node["postgres"]["version"]}/main/recovery.conf" do
   group 'postgres'
 end
 
-directory "/var/lib/postgresql/#{node["postgres"]["version"]}/archive/" do
+directory node['postgres']['archive_directory'] do
   action :create
   owner 'postgres'
   group 'postgres'
