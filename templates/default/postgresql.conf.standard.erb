@@ -242,11 +242,11 @@ hot_standby_feedback = <%= node["postgres"]["hot_standby_feedback"] %>   # send 
 
 # - Planner Cost Constants -
 
-#seq_page_cost = <%= node["postgres"]["seq_page_cost"] %>      # measured on an arbitrary scale
+seq_page_cost = <%= node["postgres"]["seq_page_cost"] %>      # measured on an arbitrary scale
 random_page_cost = <%= node["postgres"]["random_page_cost"] %>     # same scale as above
-#cpu_tuple_cost = <%= node["postgres"]["cpu_tuple_cost"] %>      # same scale as above
-#cpu_index_tuple_cost = <%= node["postgres"]["cpu_index_tuple_cost"] %>   # same scale as above
-#cpu_operator_cost = <%= node["postgres"]["cpu_operator_cost"] %>   # same scale as above
+cpu_tuple_cost = <%= node["postgres"]["cpu_tuple_cost"] %>      # same scale as above
+cpu_index_tuple_cost = <%= node["postgres"]["cpu_index_tuple_cost"] %>   # same scale as above
+cpu_operator_cost = <%= node["postgres"]["cpu_operator_cost"] %>   # same scale as above
 effective_cache_size = <%= node["postgres"]["effective_cache_size"] %>
 
 # - Genetic Query Optimizer -
