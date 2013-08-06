@@ -111,7 +111,7 @@ ssl_key_file = '<%= node["postgres"]["ssl_key_file"] %>'   # (change requires re
 # - Memory -
 
 shared_buffers = <%= node["postgres"]["shared_buffers"] %>     # min 128kB (change requires restart)
-#temp_buffers = <%= node["postgres"]["temp_buffers"] %>     # min 800kB
+temp_buffers = <%= node["postgres"]["temp_buffers"] %>     # min 800kB
 #max_prepared_transactions = <%= node["postgres"]["max_prepared_transactions"] %>    # zero disables the feature
           # (change requires restart)
 # Note:  Increasing max_prepared_transactions costs ~600 bytes of shared memory
@@ -120,7 +120,7 @@ shared_buffers = <%= node["postgres"]["shared_buffers"] %>     # min 128kB (chan
 # actively intend to use prepared transactions.
 work_mem = <%= node["postgres"]["work_mem"] %>       # min 64kB
 maintenance_work_mem = <%= node["postgres"]["maintenance_work_mem"] %>       # min 1MB
-#max_stack_depth = <%= node["postgres"]["max_stack_depth"] %>      # min 100kB
+max_stack_depth = <%= node["postgres"]["max_stack_depth"] %>      # min 100kB
 
 # - Kernel Resource Usage -
 
