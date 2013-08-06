@@ -291,7 +291,7 @@ logging_collector = <%= node["postgres"]["logging_collector"] %>    # Enable cap
           # can be absolute or relative to PGDATA
 log_filename = '<%= node["postgres"]["log_filename"] %>'  # log file name pattern,
           # can include strftime() escapes
-log_file_mode = <%= node["postgres"]["log_file_mode"] %>     # creation mode for log files,
+#log_file_mode = <%= node["postgres"]["log_file_mode"] %>     # creation mode for log files,
           # begin with 0 to use octal notation
 #log_truncate_on_rotation = <%= node["postgres"]["log_truncate_on_rotation"] %>   # If on, an existing log file with the
           # same name as the new log file will be
@@ -303,7 +303,7 @@ log_file_mode = <%= node["postgres"]["log_file_mode"] %>     # creation mode for
           # in all cases.
 log_rotation_age = <%= node["postgres"]["log_rotation_age"] %>      # Automatic rotation of logfiles will
           # happen after that time.  0 disables.
-log_rotation_size = <%= node["postgres"]["log_rotation_size"] %>   # Automatic rotation of logfiles will
+#log_rotation_size = <%= node["postgres"]["log_rotation_size"] %>   # Automatic rotation of logfiles will
           # happen after that much log output.
           # 0 disables.
 
