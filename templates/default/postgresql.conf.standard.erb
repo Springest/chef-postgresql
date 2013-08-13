@@ -261,7 +261,7 @@ effective_cache_size = <%= node["postgres"]["effective_cache_size"] %>
 
 # - Other Planner Options -
 
-#default_statistics_target = <%= node["postgres"]["default_statistics_target"] %>  # range 1-10000
+default_statistics_target = <%= node["postgres"]["default_statistics_target"] %>  # range 1-10000
 #constraint_exclusion = <%= node["postgres"]["constraint_exclusion"] %> # on, off, or partition
 #cursor_tuple_fraction = <%= node["postgres"]["cursor_tuple_fraction"] %>    # range 0.0-1.0
 #from_collapse_limit = <%= node["postgres"]["from_collapse_limit"] %>
