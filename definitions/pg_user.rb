@@ -48,6 +48,8 @@ define :pg_user, :action => :create do
 
           if privileges == "USAGE"
             command "psql -c \"GRANT #{privileges} ON SCHEMA #{schema} TO #{params[:name]}\""
+          elsif privileges == 'ALL'
+            command "psql -c \"GRANT ALL PRIVILEGES ON DATABASE #{schema} TO #{params[:name]}\""
           else
             command "psql -c \"GRANT #{privileges} ON ALL TABLES IN SCHEMA #{schema} TO #{params[:name]}\""
           end
