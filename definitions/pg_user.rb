@@ -37,22 +37,37 @@ define :pg_user, :action => :create do
     end
 
     if params[:grants]
-      execute "update grant options for pg user #{params[:name]}" do
-        user "postgres"
-        only_if exists, :user => "postgres"
+      params[:grants].each do |grant|
+        privileges = grant["privileges"].kind_of?(Array) ? grant["privileges"].join(", ") : grant["privileges"]
+        grant_type = grant["type"]
 
-        params[:grants].each do |schema,privileges|
-          if privileges.is_a? Array
-            privileges = privileges.join(',')
+        if grant_type == "schema"
+          execute("GRANT #{privileges} ON #{grant["schema"]} TO #{params[:name]}") do
+            user "postgres"
+            command "psql -c 'GRANT #{privileges} ON SCHEMA #{grant["schema"]} TO #{params[:name]}'"
           end
-
-          if privileges == "USAGE"
-            command "psql -c \"GRANT #{privileges} ON SCHEMA #{schema} TO #{params[:name]}\""
-          elsif privileges == 'ALL'
-            command "psql -c \"GRANT ALL PRIVILEGES ON DATABASE #{schema} TO #{params[:name]}\""
-          else
-            command "psql -c \"GRANT #{privileges} ON ALL TABLES IN SCHEMA #{schema} TO #{params[:name]}\""
+        elsif grant_type == "table"
+          if grant["all_tables"] == true
+            ruby_block "grant all tables of database #{grant["database"]} to user #{params[:name]}" do
+              block do
+                tables = `su postgres -c "psql -d #{grant["database"]} -t -c \\"SELECT tablename FROM pg_tables WHERE schemaname='public';\\""`.split("\n").collect(&:chomp).collect(&:strip).reject { |x| x == "" }
+                tables.each do |table|
+                  cmd = %Q{su postgres -c 'psql -d #{grant["database"]} -t -c "GRANT #{privileges} ON TABLE #{table} TO #{params[:name]};"'}
+                  output = `#{cmd}`
+                  Chef::Application.fatal!("Grant failed") if $?.exitstatus != 0
+                end
+              end
+            end
+          else # Not all tables
+            grant["tables"].each do |table|
+              execute "Granting #{privileges} on table #{table} to #{params[:name]}" do
+                user "postgres"
+                command %Q{psql -d #{grant["database"]} -t -c "GRANT #{privileges} ON TABLE #{table} TO #{params[:name]};"}
+              end
+            end
           end
+        else
+          raise "Unkown type '#{grant["type"]}'"
         end
       end
     end
