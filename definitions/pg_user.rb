@@ -50,12 +50,9 @@ define :pg_user, :action => :create do
           if grant["all_tables"] == true
             ruby_block "grant all tables of database #{grant["database"]} to user #{params[:name]}" do
               block do
-                tables = `su postgres -c "psql -d #{grant["database"]} -t -c \\"SELECT tablename FROM pg_tables WHERE schemaname='public';\\""`.split("\n").collect(&:chomp).collect(&:strip).reject { |x| x == "" }
-                tables.each do |table|
-                  cmd = %Q{su postgres -c 'psql -d #{grant["database"]} -t -c "GRANT #{privileges} ON TABLE #{table} TO #{params[:name]};"'}
-                  output = `#{cmd}`
-                  Chef::Application.fatal!("Grant failed") if $?.exitstatus != 0
-                end
+                cmd = %Q{su postgres -c 'psql -d #{grant["database"]} -t -c "GRANT #{privileges} ON ALL TABLES IN SCHEMA public TO #{params[:name]};"'}
+                output = `#{cmd}`
+                Chef::Application.fatal!("Grant #{privileges} on all tables failed for user #{params[:name]}") if $?.exitstatus != 0
               end
             end
           else # Not all tables
