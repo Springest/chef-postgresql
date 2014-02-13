@@ -67,13 +67,13 @@ define :pg_user, :action => :create do
           raise "Unkown type '#{grant["type"]}'"
         end
       end
+    end
 
-      if params[:statement_timeout]
-        statement_timeout = params[:statement_timeout] > 1000 ? params[:statement_timeout] : "#{params[:statement_timeout]}000"
-        execute("ALTER ROLE #{params[:name]} SET statement_timeout = #{params[:statement_timeout]}000") do
-          user "postgres"
-          command "psql -c 'ALTER ROLE #{params[:name]} SET statement_timeout = #{statement_timeout}"
-        end
+    if params[:statement_timeout]
+      statement_timeout = params[:statement_timeout] > 1000 ? params[:statement_timeout] : "#{params[:statement_timeout]}000"
+      execute("ALTER ROLE #{params[:name]} SET statement_timeout = #{params[:statement_timeout]}000") do
+        user "postgres"
+        command "psql -c 'ALTER ROLE #{params[:name]} SET statement_timeout = #{statement_timeout}"
       end
     end
 
