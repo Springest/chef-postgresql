@@ -63,6 +63,11 @@ define :pg_user, :action => :create do
               end
             end
           end
+        elsif grant_type == "default"
+          execute("ALTER DEFAULT PRIVILEGES IN SCHEMA #{grant["schema"]} GRANT #{privileges} ON TABLES TO #{params[:name]}") do
+            user "postgres"
+            command "psql -c 'ALTER DEFAULT PRIVILEGES IN SCHEMA #{grant["schema"]} GRANT #{privileges} ON TABLES TO #{params[:name]}'"
+          end
         else
           raise "Unkown type '#{grant["type"]}'"
         end
