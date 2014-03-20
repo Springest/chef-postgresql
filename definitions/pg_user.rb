@@ -60,6 +60,7 @@ define :pg_user, :action => :create do
               execute "Granting #{privileges} on table #{table} to #{params[:name]}" do
                 user "postgres"
                 command %Q{psql -d #{grant["database"]} -t -c "GRANT #{privileges} ON TABLE #{table} TO #{params[:name]};"}
+                only_if { %Q{psql -d #{grant["database"]} -t -c "\dt" | grep #{table} | wc -l}.to_i > 0 }
               end
             end
           end
