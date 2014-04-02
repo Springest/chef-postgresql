@@ -6,7 +6,7 @@ template "/var/chef_file_cache/pgpool-regclass.sql" do
   action :create
 end
 
-template "/var/chef_file_cache/pgpool-recovery.sql"
+template "/var/chef_file_cache/pgpool-recovery.sql" do
   source "pgpool-recovery.sql.erb"
   owner "root"
   action :create
