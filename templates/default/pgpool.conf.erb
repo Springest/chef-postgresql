@@ -1,0 +1,33 @@
+backend_hostname0 = '<%= node["postgres"]["replication"]["master"] %>'
+backend_port0 = 5432
+backend_weight0 = 1
+backend_data_directory0 = '/var/lib/postgresql/9.2/main/'
+backend_flag0 = 'ALLOW_TO_FAILOVER'
+backend_hostname1 = '<%= node["postgres"]["replication"]["slave"] %>'
+backend_port1 = 5432
+backend_weight1 = 1
+backend_data_directory1 = '/var/lib/postgresql/9.2/main/'
+backend_flag1 = 'ALLOW_TO_FAILOVER'
+
+replication_mode = true
+load_balance_mode = true
+listen_addresses = '*'
+port = 5432
+pcp_port = 9898
+log_destination = 'syslog'
+insert_lock = on
+
+# memory query cache
+memory_cache_enabled = on
+memqcache_total_size = <%= node["postgres"]["shared_buffers"] %>
+memqcache_max_num_cache = 500000
+
+# do we want this? also requires ssl_key and ssl_cert
+# ssl = true
+
+# connection pooling
+num_init_children = 1000
+max_pool = 4
+connection_life_time = 0
+child_max_connections = 0
+child_life_time = 300
