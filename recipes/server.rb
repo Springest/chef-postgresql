@@ -10,6 +10,8 @@ include_recipe "postgres::kernel"
 # install the package
 package "postgresql-#{node["postgres"]["version"]}"
 
+include_recipe "postgres::pg_pool2_server_support"
+
 # setup the data directory
 include_recipe "postgres::data_directory"
 

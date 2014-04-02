@@ -42,6 +42,30 @@ define :pg_database, :action => :create do
       not_if exists, :user => defaults[:user]
     end
 
+    createfunc = ["psql"]
+    createfunc.push "-U #{defaults[:username]}" if defaults[:username]
+    createfunc.push "--host #{defaults[:host]}" if defaults[:host]
+    createfunc.push "--port #{defaults[:port]}" if defaults[:port]
+    createfunc.push "-W -f /var/chef_file_cache/pgpool-recovery.sql #{params[:name]}"
+    createfunc = createfunc.join ' '
+
+    execute "create pgpool2 recovery functions on #{params[:name]}" do
+      user defaults[:user]
+      command createfunc
+    end
+
+    createfunc = ["psql"]
+    createfunc.push "-U #{defaults[:username]}" if defaults[:username]
+    createfunc.push "--host #{defaults[:host]}" if defaults[:host]
+    createfunc.push "--port #{defaults[:port]}" if defaults[:port]
+    createfunc.push "-W -f /var/chef_file_cache/pgpool-regclass.sql #{params[:name]}"
+    createfunc = createfunc.join ' '
+
+    execute "create pgpool2 regclass functions on #{params[:name]}" do
+      user defaults[:user]
+      command createfunc
+    end
+
   when :drop
     dropdb = ["dropdb"]
     dropdb.push "-U #{defaults[:username]}" if defaults[:username]
