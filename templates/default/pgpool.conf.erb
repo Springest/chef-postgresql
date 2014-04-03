@@ -3,9 +3,9 @@
 
 # These settings do not seem to exist in this version!
 # memory query cache
-#memory_cache_enabled = on
-#memqcache_total_size = <%= node["postgres"]["memqcache_total_size"] %>
-#memqcache_max_num_cache = 500000
+memory_cache_enabled = on
+memqcache_total_size = <%= node["postgres"]["memqcache_total_size"] %>
+memqcache_max_num_cache = 500000
 
 # ----------------------------
 # pgPool-II configuration file
@@ -321,7 +321,7 @@ follow_master_command = ''
 parallel_mode = off
                                    # Activates parallel query mode
                                    # (change requires restart)
-enable_query_cache = on
+enable_query_cache = off
                                    # Activates query cache
                                    # (change requires restart)
 
