@@ -13,4 +13,10 @@ template "/etc/pgpool2/pgpool.conf" do
   source "pgpool.conf.erb"
   owner "root"
   action :create
+  notifies :reload, 'service[pgpool2]'
+end
+
+service "pgpool2" do
+  supports :restart => true, :status => true, :reload => true
+  action [:enable, :start]
 end
