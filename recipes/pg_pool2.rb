@@ -27,7 +27,7 @@ template "/etc/pgpool2/pool_hba.conf" do
   owner  "postgres"
   group  "postgres"
   mode   "0640"
-  notifies :reload, "service[postgresql]"
+  notifies :reload, "service[pgpool2]"
 end
 
 service "pgpool2" do
