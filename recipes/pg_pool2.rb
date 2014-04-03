@@ -9,7 +9,7 @@ template "/etc/pgpool2/pcp.conf" do
   only_if { node['postgres']['pgpool2'] && node['postgres']['pgpool2']['users'] }
 end
 
-directory "/var/run/pgpool" do
+directory "/var/run/postgresql" do
   mode 0755
   recursive true
   owner "postgres"
