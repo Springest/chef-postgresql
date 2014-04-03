@@ -22,6 +22,8 @@ template "/etc/pgpool2/pgpool.conf" do
   notifies :reload, 'service[pgpool2]'
 end
 
+node.set["postgres"]["pg_hba_defaults"] = false
+
 template "/etc/pgpool2/pool_hba.conf" do
   source "pg_hba.conf.erb"
   owner  "postgres"
