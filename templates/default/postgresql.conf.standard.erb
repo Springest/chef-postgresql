@@ -65,7 +65,11 @@ max_connections = <%= node["postgres"]["max_connections"] %>     # (change requi
 # Note:  Increasing max_connections costs ~400 bytes of shared memory per
 # connection slot, plus lock space (see max_locks_per_transaction).
 #superuser_reserved_connections = <%= node["postgres"]["superuser_reserved_connections"] %> # (change requires restart)
+<% if node["postgres"]["version"] == "9.3" %>
+unix_socket_directories = '<%= node["postgres"]["unix_socket_directory"] %>'   # (change requires restart)
+<% else %>
 unix_socket_directory = '<%= node["postgres"]["unix_socket_directory"] %>'   # (change requires restart)
+<% end %>
 #unix_socket_group = '<%= node["postgres"]["unix_socket_group"] %>'     # (change requires restart)
 #unix_socket_permissions = <%= node["postgres"]["unix_socket_permissions"] %>   # begin with 0 to use octal notation
           # (change requires restart)
@@ -201,7 +205,11 @@ max_wal_senders = <%= node["postgres"]["max_wal_senders"] %>    # max number of 
 # wal_sender_delay = <%= node["postgres"]["wal_sender_delay"] %>    # walsender cycle time, 1-10000 milliseconds
 wal_keep_segments = <%= node["postgres"]["wal_keep_segments"] %>    # in logfile segments, 16MB each; 0 disables
 vacuum_defer_cleanup_age = <%= node["postgres"]["vacuum_defer_cleanup_age"] %> # number of xacts by which cleanup is delayed
+<% if node["postgres"]["version"] == "9.3" %>
+wal_sender_timeout = <%= node["postgres"]["replication_timeout"] %>  # in milliseconds; 0 disables
+<% else %>
 replication_timeout = <%= node["postgres"]["replication_timeout"] %>  # in milliseconds; 0 disables
+<% end %>
 synchronous_standby_names = '<%= node["postgres"]["synchronous_standby_names"] %>' # standby servers that provide sync rep
 # comma-separated list of application_name
 # from standby(s); '*' = all
