@@ -1,3 +1,5 @@
+include_recipe "postgres::apt_repository"
+
 package "pgpool2"
 
 include_recipe "postgres::kernel"
