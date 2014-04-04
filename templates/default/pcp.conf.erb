@@ -28,7 +28,8 @@
 # be ignored. Again, no spaces or tabs allowed before '#'.
 
 # USERID:MD5PASSWD
-
+<% if node['postgres']['pgpool2'] && node['postgres']['pgpool2']['users'] %>
 <% node['postgres']['pgpool2']['users'].each do |u,p| %>
 <%= "#{u}:#{p}" %>
+<% end %>
 <% end %>

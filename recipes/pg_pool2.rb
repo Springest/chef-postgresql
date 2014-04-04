@@ -9,7 +9,6 @@ template "/etc/pgpool2/pcp.conf" do
   action :create
   owner "postgres"
   mode "0640"
-  only_if { node['postgres']['pgpool2'] && node['postgres']['pgpool2']['users'] }
 end
 
 directory "/var/run/postgresql" do
