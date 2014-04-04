@@ -30,3 +30,13 @@ service "pgpool2" do
   supports :restart => true, :status => true, :reload => true
   action [:enable, :start]
 end
+
+node.set["postgres"]["pg_hba_defaults"] = false
+
+template "/etc/pgpool2/pool_hba.conf" do
+  source "pg_hba.conf.erb"
+  owner  "postgres"
+  group  "postgres"
+  mode   "0640"
+  notifies :reload, "service[pgpool2]"
+end
