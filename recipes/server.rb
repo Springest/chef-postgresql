@@ -11,11 +11,9 @@ include_recipe "postgres::kernel"
 package "postgresql-#{node["postgres"]["version"]}"
 
 execute "stop-pg" do
-  command "kill `cat /var/lib/postgresql/#{node['postgres']['version']}/main/postmaster.pid`"
+  command "kill `cat /var/lib/postgresql/#{node['postgres']['version']}/main/postmaster.pid`; true"
   only_if { File.exists?("/var/lib/postgresql/#{node['postgres']['version']}/main/postmaster.pid") }
 end
-
-include_recipe "postgres::pg_pool2_server_support"
 
 # setup the data directory
 include_recipe "postgres::data_directory"
@@ -23,11 +21,15 @@ include_recipe "postgres::data_directory"
 # add the configuration
 include_recipe "postgres::configuration"
 
+# declare the system service
+include_recipe "postgres::service"
+
+# create pgpool-ii support functions
+include_recipe "postgres::pg_pool2_server_support"
+
 # setup users
 include_recipe "postgres::pg_user"
 
 # setup databases
 include_recipe "postgres::pg_database"
 
-# declare the system service
-include_recipe "postgres::service"
