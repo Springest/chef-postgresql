@@ -18,6 +18,16 @@ directory "/var/run/postgresql" do
   owner "postgres"
 end
 
+directory "/var/log/pgpool" do
+  mode "0755"
+  owner "postgres"
+end
+
+directory "/var/log/pgpool/oiddir" do
+  mode "0755"
+  owner "postgres"
+end
+
 template "/etc/pgpool2/pgpool.conf" do
   source "pgpool.conf.erb"
   owner "postgres"
