@@ -2,7 +2,7 @@ package "postgresql-#{node["postgres"]["version"]}-pgpool2"
 
 template "/var/chef_file_cache/pgpool-regclass.sql" do
   source "pgpool-regclass.sql.erb"
-  owner "root"
+  owner "postgres"
   action :create
   notifies :run, 'execute[create-pgpool-regclass]', :immediately
 end
@@ -14,7 +14,7 @@ end
 
 template "/var/chef_file_cache/pgpool-recovery.sql" do
   source "pgpool-recovery.sql.erb"
-  owner "root"
+  owner "postgres"
   action :create
   notifies :run, 'execute[create-pgpool-recovery]', :immediately
 end
@@ -25,7 +25,7 @@ execute "create-pgpool-recovery" do
 end
 
 cookbook_file "/var/chef_file_cache/insert_lock.sql" do
-  owner "root"
+  owner "postgres"
   action :create
   notifies :run, 'execute[create-pgpool-insert-lock]', :immediately
 end

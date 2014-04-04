@@ -1,11 +1,11 @@
 CREATE OR REPLACE FUNCTION pgpool_recovery(text, text, text)
 RETURNS bool
-AS '<%= "/usr/lib/postgresql/#{node["postgres"]["version"]}/lib/pgpool_regclass.so" %>', 'pgpool_recovery'
+AS '<%= "/usr/lib/postgresql/#{node["postgres"]["version"]}/lib/pgpool-regclass.so" %>', 'pgpool_recovery'
 LANGUAGE C STRICT;
 
 CREATE OR REPLACE FUNCTION pgpool_remote_start(text, text)
 RETURNS bool
-AS '<%= "/usr/lib/postgresql/#{node["postgres"]["version"]}/lib/pgpool_regclass.so" %>', 'pgpool_remote_start'
+AS '<%= "/usr/lib/postgresql/#{node["postgres"]["version"]}/lib/pgpool-regclass.so" %>', 'pgpool_remote_start'
 LANGUAGE C STRICT;
 
 CREATE OR REPLACE FUNCTION pgpool_pgctl(text, text)
@@ -15,5 +15,5 @@ LANGUAGE C STRICT;
 
 CREATE OR REPLACE FUNCTION pgpool_switch_xlog(text)
 RETURNS text
-AS '<%= "/usr/lib/postgresql/#{node["postgres"]["version"]}/lib/pgpool_regclass.so" %>', 'pgpool_switch_xlog'
+AS '<%= "/usr/lib/postgresql/#{node["postgres"]["version"]}/lib/pgpool-regclass.so" %>', 'pgpool_switch_xlog'
 LANGUAGE C STRICT;
