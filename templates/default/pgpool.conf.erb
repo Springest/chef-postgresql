@@ -69,7 +69,7 @@ backend_port<%= i %> = 5432
                                    # Port number for backend <%= i %>
 backend_weight<%= i %> = <%= srv['weight'] %>
                                    # Weight for backend <%= i %> (only in load balancing mode)
-backend_data_directory<%= i %> = '/var/lib/postgresql/9.2/main/'
+backend_data_directory<%= i %> = '/var/lib/postgresql/<%= node["postgres"]["version"] %>/main/'
                                    # Data directory for backend <%= i %>
 backend_flag<%= i %> = 'ALLOW_TO_FAILOVER'
                                    # Controls various backend behavior
