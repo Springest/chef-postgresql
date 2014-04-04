@@ -5,4 +5,5 @@
 
 include_recipe "postgres"
 
-package "postgresql-#{node["postgres"]["version"]}-postgis"
+postgis = node["postgres"]["version"] == "9.3" ? "postgresql-9.3-postgis-2.1" : "postgresql-#{node["postgres"]["version"]}-postgis"
+package postgis
