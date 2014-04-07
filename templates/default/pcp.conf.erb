@@ -30,6 +30,6 @@
 # USERID:MD5PASSWD
 <% if node['postgres']['pgpool2'] && node['postgres']['pgpool2']['users'] %>
 <% node['postgres']['pgpool2']['users'].each do |u,p| %>
-<%= "#{u}:#{p}" %>
+<%= u %>:<%= `pg_md5 #{p}`.chomp  %>
 <% end %>
 <% end %>
