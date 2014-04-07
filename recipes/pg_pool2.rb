@@ -11,6 +11,13 @@ template "/etc/pgpool2/pcp.conf" do
   mode "0640"
 end
 
+template "/etc/pgpool2/pool_passwd" do
+  source 'empty'
+  action :create_if_missing
+  owner "postgres"
+  mode "0640"
+end
+
 directory "/var/run/postgresql" do
   mode "0755"
   recursive true
