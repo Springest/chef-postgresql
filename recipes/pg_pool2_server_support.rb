@@ -22,6 +22,7 @@ end
 execute "create-pgpool-recovery" do
   command "psql -f /var/chef_file_cache/pgpool-recovery.sql template1"
   user "postgres"
+  action :nothing
 end
 
 cookbook_file "/var/chef_file_cache/insert_lock.sql" do
@@ -33,4 +34,5 @@ end
 execute "create-pgpool-insert-lock" do
   command "psql -f /var/chef_file_cache/insert_lock.sql template1"
   user "postgres"
+  action :nothing
 end
