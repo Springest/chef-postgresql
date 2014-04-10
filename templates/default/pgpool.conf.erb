@@ -409,13 +409,13 @@ fail_over_on_backend_error = on
 # ONLINE RECOVERY
 #------------------------------------------------------------------------------
 
-recovery_user = 'nobody'
+recovery_user = 'postgres'
                                    # Online recovery user
-recovery_password = ''
+recovery_password = '<%= node["postgres"]["pgpool2"]["users"]["postgres"] %>'
                                    # Online recovery password
-recovery_1st_stage_command = ''
+recovery_1st_stage_command = 'pgpool_recovery'
                                    # Executes a command in first stage
-recovery_2nd_stage_command = ''
+recovery_2nd_stage_command = 'pgpool_recovery2'
                                    # Executes a command in second stage
 recovery_timeout = 90
                                    # Timeout in seconds to wait for the
