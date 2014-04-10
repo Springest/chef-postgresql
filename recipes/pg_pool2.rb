@@ -49,6 +49,12 @@ end
 
 node.set["postgres"]["pg_hba_defaults"] = false
 
+execute "set socket max connections" do
+  command "sysctl -w net.core.somaxconn=#{node['postgres']['pgpool2']['somaxconn']} &&\
+    echo 'net.core.somaxconn = #{node['postgres']['pgpool2']['somaxconn']}' > /etc/sysctl"
+  only_if { `sysctl net.core.somaxconn | grep #{node['postgres']['pgpool2']['somaxconn']}`.chomp.empty? }
+end
+
 template "/etc/pgpool2/pool_hba.conf" do
   source "pg_hba.conf.erb"
   owner  "postgres"

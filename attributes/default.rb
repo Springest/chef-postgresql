@@ -363,3 +363,4 @@ default["postgres"]["databases"]                       = []
 #------------------------------------------------------------------------------
 
 default["postgres"]["custom_variable_classes"]         = ""
+
