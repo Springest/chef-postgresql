@@ -130,7 +130,7 @@ child_life_time = 300
 child_max_connections = 0
                                    # Pool exits after receiving that many connections
                                    # 0 means no exit
-connection_life_time = 0
+connection_life_time = <%= node['postgres']['pgpool2']['connection_life_time'] %>
                                    # Connection to backend closes after being idle for this many seconds
                                    # 0 means no close
 client_idle_limit = 0
