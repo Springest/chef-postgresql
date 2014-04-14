@@ -61,6 +61,21 @@ define :pg_user, :action => :create do
               end
             end
           end
+        elsif grant_type == "sequence"
+          if grant["all_sequences"] == true
+            execute("GRANT #{privileges} ON ALL SEQUENCES IN SCHEMA public TO #{params[:name]}") do
+              user "postgres"
+              command "psql -d #{grant["database"]} -t -c 'GRANT #{privileges} ON ALL SEQUENCES IN SCHEMA public TO #{params[:name]};'"
+            end
+          else # Not all sequences
+            grant["sequences"].each do |sequence|
+              execute "Granting #{privileges} on sequence #{sequence} to #{params[:name]}" do
+                user "postgres"
+                command %Q{psql -d #{grant["database"]} -t -c "GRANT #{privileges} ON SEQUENCE #{sequence} TO #{params[:name]};"}
+                only_if { %Q{psql -d #{grant["database"]} -t -c "\ds" | grep #{sequence} | wc -l}.to_i > 0 }
+              end
+            end
+          end
         elsif grant_type == "default"
           execute("ALTER DEFAULT PRIVILEGES IN SCHEMA #{grant["schema"]} GRANT #{privileges} ON TABLES TO #{params[:name]}") do
             user "postgres"
