@@ -42,9 +42,9 @@ define :pg_user, :action => :create do
         grant_type = grant["type"]
 
         if grant_type == "schema"
-          execute("GRANT #{privileges} ON #{grant["schema"]} TO #{params[:name]}") do
+          execute("GRANT #{privileges} ON #{grant["schema"]} in #{grant["database"]} TO #{params[:name]}") do
             user "postgres"
-            command "psql -c 'GRANT #{privileges} ON SCHEMA #{grant["schema"]} TO #{params[:name]}'"
+            command "psql -d #{grant["database"]} -c 'GRANT #{privileges} ON SCHEMA #{grant["schema"]} TO #{params[:name]}'"
           end
         elsif grant_type == "table"
           if grant["all_tables"] == true
