@@ -40,6 +40,7 @@ define :pg_user, :action => :create do
       params[:grants].each do |grant|
         privileges = grant["privileges"].kind_of?(Array) ? grant["privileges"].join(", ") : grant["privileges"]
         grant_type = grant["type"]
+        schema = grant["schema"] || "public"
 
         if grant_type == "schema"
           execute("GRANT #{privileges} ON #{grant["schema"]} TO #{params[:name]}") do
@@ -48,9 +49,9 @@ define :pg_user, :action => :create do
           end
         elsif grant_type == "table"
           if grant["all_tables"] == true
-            execute("GRANT #{privileges} ON ALL TABLES IN SCHEMA public TO #{params[:name]} for database #{grant["database"]}") do
+            execute("GRANT #{privileges} ON ALL TABLES IN SCHEMA #{schema} TO #{params[:name]} for database #{grant["database"]}") do
               user "postgres"
-              command "psql -d #{grant["database"]} -t -c 'GRANT #{privileges} ON ALL TABLES IN SCHEMA public TO #{params[:name]};'"
+              command "psql -d #{grant["database"]} -t -c 'GRANT #{privileges} ON ALL TABLES IN SCHEMA #{schema} TO #{params[:name]};'"
             end
           else # Not all tables
             grant["tables"].each do |table|
@@ -63,9 +64,9 @@ define :pg_user, :action => :create do
           end
         elsif grant_type == "sequence"
           if grant["all_sequences"] == true
-            execute("GRANT #{privileges} ON ALL SEQUENCES IN SCHEMA public TO #{params[:name]}") do
+            execute("GRANT #{privileges} ON ALL SEQUENCES IN SCHEMA #{schema} TO #{params[:name]}") do
               user "postgres"
-              command "psql -d #{grant["database"]} -t -c 'GRANT #{privileges} ON ALL SEQUENCES IN SCHEMA public TO #{params[:name]};'"
+              command "psql -d #{grant["database"]} -t -c 'GRANT #{privileges} ON ALL SEQUENCES IN SCHEMA #{schema} TO #{params[:name]};'"
             end
           else # Not all sequences
             grant["sequences"].each do |sequence|
