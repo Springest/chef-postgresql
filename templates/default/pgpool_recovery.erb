@@ -40,23 +40,23 @@ $LOGGER "Creating file recovery.conf"
 echo "restore_command = '$SCP $HOSTNAME:$SRC_ARCHIVE_LOG_DIR/%f %p'" > $SRC_DATA/recovery.conf
 
 $LOGGER "Rsyncing directory base"
-$RSYNC $SRC_DATA/base/ $DST_HOST:$DST_DATAbase/
+$RSYNC $SRC_DATA/base/ $DST_HOST:$DST_DATA/base/
 $LOGGER "Rsyncing directory global"
-$RSYNC $SRC_DATA/global/ $DST_HOST:$DST_DATAglobal/
+$RSYNC $SRC_DATA/global/ $DST_HOST:$DST_DATA/global/
 $LOGGER "Rsyncing directory pg_clog"
-$RSYNC $SRC_DATA/pg_clog/ $DST_HOST:$DST_DATApg_clog/
+$RSYNC $SRC_DATA/pg_clog/ $DST_HOST:$DST_DATA/pg_clog/
 $LOGGER "Rsyncing directory pg_multixact"
-$RSYNC $SRC_DATA/pg_multixact/ $DST_HOST:$DST_DATApg_multixact/
+$RSYNC $SRC_DATA/pg_multixact/ $DST_HOST:$DST_DATA/pg_multixact/
 $LOGGER "Rsyncing directory pg_subtrans"
-$RSYNC $SRC_DATA/pg_subtrans/ $DST_HOST:$DST_DATApg_subtrans/
+$RSYNC $SRC_DATA/pg_subtrans/ $DST_HOST:$DST_DATA/pg_subtrans/
 $LOGGER "Rsyncing directory pg_tblspc"
-$RSYNC $SRC_DATA/pg_tblspc/ $DST_HOST:$DST_DATApg_tblspc/
+$RSYNC $SRC_DATA/pg_tblspc/ $DST_HOST:$DST_DATA/pg_tblspc/
 $LOGGER "Rsyncing directory pg_twophase"
-$RSYNC $SRC_DATA/pg_twophase/ $DST_HOST:$DST_DATApg_twophase/
+$RSYNC $SRC_DATA/pg_twophase/ $DST_HOST:$DST_DATA/pg_twophase/
 $LOGGER "Rsyncing directory pg_xlog"
-$RSYNC $SRC_DATA/pg_xlog/ $DST_HOST:$DST_DATApg_xlog/
+$RSYNC $SRC_DATA/pg_xlog/ $DST_HOST:$DST_DATA/pg_xlog/
 $LOGGER "Rsyncing file recovery.conf (with source deletion)"
-$RSYNC --remove-source-files $SRC_DATA/recovery.conf $DST_HOST:$DST_DATA
+$RSYNC --remove-source-files $SRC_DATA/recovery.conf $DST_HOST:$DST_DATA/
 
 $LOGGER "Executing pg_stop_backup"
 $PSQL -p $SRC_PORT -d $SRC_DBNAME -c 'select pg_stop_backup()'
