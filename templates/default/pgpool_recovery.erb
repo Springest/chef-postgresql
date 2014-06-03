@@ -7,7 +7,7 @@ SCP=/usr/bin/scp
 SSH=/usr/bin/ssh
 LOGGER="log /var/log/postgresql/pgpool_recovery.log"
 #"/usr/bin/logger -i -p local0.info -t pgpool"
-RSYNC="/usr/bin/rsync --archive --quiet --compress --rsh=$SSH --delete"
+RSYNC="/usr/bin/rsync --archive --quiet --rsh=$SSH --delete"
 BASENAME=`/usr/bin/basename $0`
 HOSTNAME=`/bin/hostname`
 ID=`/usr/bin/id -un`
