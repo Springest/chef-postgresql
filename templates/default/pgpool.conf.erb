@@ -133,7 +133,7 @@ child_max_connections = 0
 connection_life_time = <%= node['postgres']['pgpool2']['connection_life_time'] %>
                                    # Connection to backend closes after being idle for this many seconds
                                    # 0 means no close
-client_idle_limit = -1
+client_idle_limit = 0
                                    # Client is disconnected after being idle for that many seconds
                                    # (even inside an explicit transactions!)
                                    # 0 means no disconnection
@@ -421,7 +421,7 @@ recovery_timeout = 90
                                    # Timeout in seconds to wait for the
                                    # recovering node's postmaster to start up
                                    # 0 means no wait
-client_idle_limit_in_recovery = 0
+client_idle_limit_in_recovery = -1
                                    # Client is disconnected after being idle
                                    # for that many seconds in the second stage
                                    # of online recovery
