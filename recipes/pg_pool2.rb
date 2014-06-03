@@ -62,3 +62,9 @@ template "/etc/pgpool2/pool_hba.conf" do
   mode   "0640"
   notifies :reload, "service[pgpool2]"
 end
+
+template "/usr/sbin/pgpool_remote_start" do
+  owner "postgres"
+  group "postgres"
+  mode "0755"
+end

@@ -1,19 +1,33 @@
-#! /bin/sh
-# Online recovery 2nd stage script
-#
-datadir=$1                                            # master dabatase cluster
-DEST=$2                                               # hostname of the DB node to be recovered
-DESTDIR=$3                                            # database cluster of the DB node to be recovered
-port=5432                                             # PostgreSQL port number
-archdir=<%= node["postgres"]["archive_directory"] %>  # archive log directory
+#!/bin/sh
 
+# Second stage of recovery.
+
+DATADIR=$1
+PSQL=/usr/bin/psql
+LOGGER="log /var/log/postgresql/pgpool_recovery.log"
+BASENAME=`/usr/bin/basename $0`
+ID=`/usr/bin/id -un`
+SRC_PORT=5432
+SRC_DBNAME=postgres
+
+log()
+{
+echo $(date +"%D %T") $2 >> $1
+}
+
+$LOGGER "Executing $BASENAME as user $ID"
+
+$LOGGER "Flushing sequence values to xlog"
 # Force to flush current value of sequences to xlog
-psql -p $port -t -c 'SELECT datname FROM pg_database WHERE NOT datistemplate AND datallowconn' template1
+psql -p $SRC_PORT -t -c 'SELECT datname FROM pg_database WHERE NOT datistemplate AND datallowconn' template1
 while read i
 do
   if [ "$i" != "" ];then
-    psql -p $port -c "SELECT setval(oid, nextval(oid)) FROM pg_class WHERE relkind = 'S'" $i
+    psql -p $SRC_PORT -c "SELECT setval(oid, nextval(oid)) FROM pg_class WHERE relkind = 'S'" $i
   fi
 done
 
-psql -p $port -c "SELECT pgpool_switch_xlog('$archdir')" template1
+$LOGGER "Executing pgpool_switch_xlog"
+$PSQL -p $SRC_PORT -d $SRC_DBNAME -c "select pgpool_switch_xlog('$DATADIR/archive_log')"
+
+exit 0
