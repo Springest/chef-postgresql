@@ -28,6 +28,6 @@ do
 done
 
 $LOGGER "Executing pgpool_switch_xlog"
-$PSQL -p $SRC_PORT -c 'select pgpool_switch_xlog()' template1
+$PSQL -p $SRC_PORT -c "select pgpool_switch_xlog('<%= node["postgres"]["data_directory"] %>/archive_log')" template1
 
 exit 0
