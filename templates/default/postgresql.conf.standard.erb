@@ -186,7 +186,7 @@ checkpoint_completion_target = <%= node["postgres"]["checkpoint_completion_targe
 
 # - Archiving -
 
-<% if node["postgres"]["replication"].any? %>
+<% if node["postgres"]["replication"].any? || node["postgres"]["archive_mode"] == 'on' %>
 archive_mode = <%= node["postgres"]["archive_mode"] %>   # allows archiving to be done (change requires restart)
 archive_command = '<%= node["postgres"]["archive_command"] %>'   # command to use to archive a logfile segment
 archive_timeout = <%= node["postgres"]["archive_timeout"] %>    # force a logfile segment switch after this number of seconds; 0 disables

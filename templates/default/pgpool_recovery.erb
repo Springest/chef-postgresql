@@ -17,7 +17,7 @@ ID=`/usr/bin/id -un`
 # $3 = Database cluster path of a recovery target node.
 
 #PG_HOME=/var/lib/postgresql
-SRC_ARCHIVE_LOG_DIR=<%= node["postgres"]["data_directory"] %>/archive_log
+SRC_ARCHIVE_LOG_DIR=<%= node["postgres"]["archive_directory"] %>
 
 SRC_DATA=$1
 DST_HOST=$2
