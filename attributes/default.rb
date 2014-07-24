@@ -365,3 +365,9 @@ default["postgres"]["databases"]                       = []
 
 default["postgres"]["custom_variable_classes"]         = ""
 
+#------------------------------------------------------------------------------
+# CLUSTER OPTIONS
+#------------------------------------------------------------------------------
+
+default["postgres"]["cluster"]["weight"]               = 1
+
