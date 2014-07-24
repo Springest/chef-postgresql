@@ -384,7 +384,7 @@ default_statistics_target = <%= node["postgres"]["default_statistics_target"] %>
 #log_duration = <%= node["postgres"]["log_duration"] %>
 #log_error_verbosity = <%= node["postgres"]["log_error_verbosity"] %>    # terse, default, or verbose messages
 #log_hostname = <%= node["postgres"]["log_hostname"] %>
-#log_line_prefix = '<%= node["postgres"]["log_line_prefix"] %>'     # special values:
+log_line_prefix = '<%= node["postgres"]["log_line_prefix"] %>'     # special values:
           #   %a = application name
           #   %u = user name
           #   %d = database name
