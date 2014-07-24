@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 SSH=/usr/bin/ssh
 LOGGER="log /var/log/postgresql/pgpool_remote_start.log"
@@ -17,7 +17,7 @@ echo $(date +"%D %T") $2 >> $1
 
 $LOGGER "Executing $BASENAME as user $ID"
 $LOGGER "Starting remote PostgreSQL server"
-$SSH -T $DST_HOST '$DST_DB_START' 2>>/var/log/postgresql/pgpool_remote_start.log 1>>/var/log/postgresql/pgpool_remote_start.log
+$SSH -i /var/lib/postgresql/.ssh/id_rsa.pub -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $DST_HOST '$DST_DB_START' 2>>/var/log/postgresql/pgpool_remote_start.log 1>>/var/log/postgresql/pgpool_remote_start.log
 $LOGGER "Remote PostgeSQL server started."
 
 exit 0

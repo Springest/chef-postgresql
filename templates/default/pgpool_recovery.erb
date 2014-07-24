@@ -24,7 +24,7 @@ DST_HOST=$2
 DST_DATA=$3
 
 SRC_DBNAME=postgres
-SRC_PORT=5432
+SRC_PORT=<%= node["postgres"]['port'] %>
 
 log()
 {
@@ -36,8 +36,12 @@ $LOGGER "Executing $BASENAME as user $ID"
 $LOGGER "Executing pg_start_backup"
 $PSQL -p $SRC_PORT -d $SRC_DBNAME -c "select pg_start_backup('pgpool-recovery')"
 
-$LOGGER "Creating file recovery.conf"
-echo "restore_command = '$SCP $HOSTNAME:$SRC_ARCHIVE_LOG_DIR/%f %p'" > $SRC_DATA/recovery.conf
+$LOGGER "Creating file recovery template"
+echo "standby_mode = 'on'" > $SRC_DATA/recovery.template
+RESTCMD="restore_command = '$SCP $HOSTNAME:$SRC_ARCHIVE_LOG_DIR/%f %p'"
+echo $RESTCMD >> $SRC_DATA/recovery.template
+CONNINFO="primary_conninfo = 'host=$HOSTNAME port=$SRC_PORT user=<%= node["postgres"]['replication']['user'] %> password=<%= node["postgres"]["replication"]["password"] %>'"
+echo $CONNINFO >> $SRC_DATA/recovery.template
 
 $LOGGER "Rsyncing directory base"
 $RSYNC $SRC_DATA/base/ $DST_HOST:$DST_DATA/base/
@@ -56,7 +60,7 @@ $RSYNC $SRC_DATA/pg_twophase/ $DST_HOST:$DST_DATA/pg_twophase/
 $LOGGER "Rsyncing directory pg_xlog"
 $RSYNC $SRC_DATA/pg_xlog/ $DST_HOST:$DST_DATA/pg_xlog/
 $LOGGER "Rsyncing file recovery.conf (with source deletion)"
-$RSYNC --remove-source-files $SRC_DATA/recovery.conf $DST_HOST:$DST_DATA/
+$RSYNC --remove-source-files $SRC_DATA/recovery.template $DST_HOST:$DST_DATA/recovery.conf
 
 $LOGGER "Executing pg_stop_backup"
 $PSQL -p $SRC_PORT -d $SRC_DBNAME -c 'select pg_stop_backup()'

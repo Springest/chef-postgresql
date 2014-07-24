@@ -19,3 +19,10 @@ directory node['postgres']['archive_directory'] do
   group 'postgres'
   recursive true
 end
+
+# create a user
+pg_user node["postgres"]["replication"]["user"] do
+  privileges :superuser => true, :createdb => false, :login => true
+  password node["postgres"]["replication"]["password"] if node["postgres"]["replication"]["password"]
+  encrypted_password node["postgres"]["replication"]["encrypted_password"] if node["postgres"]["replication"]["encrypted_password"]
+end
