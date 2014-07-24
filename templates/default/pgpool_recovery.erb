@@ -36,7 +36,7 @@ $LOGGER "Executing $BASENAME as user $ID"
 $LOGGER "Executing pg_start_backup"
 $PSQL -p $SRC_PORT -d $SRC_DBNAME -c "select pg_start_backup('pgpool-recovery')"
 
-$LOGGER "Creating file recovery template"
+$LOGGER "Creating recovery template"
 echo "standby_mode = 'on'" > $SRC_DATA/recovery.template
 RESTCMD="restore_command = '$SCP $HOSTNAME:$SRC_ARCHIVE_LOG_DIR/%f %p'"
 echo $RESTCMD >> $SRC_DATA/recovery.template
