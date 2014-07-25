@@ -369,5 +369,6 @@ default["postgres"]["custom_variable_classes"]         = ""
 # CLUSTER OPTIONS
 #------------------------------------------------------------------------------
 
+default["postgres"]["cluster"]["slave"]                = false
 default["postgres"]["cluster"]["weight"]               = 1
 

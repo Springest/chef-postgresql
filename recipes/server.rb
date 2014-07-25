@@ -28,7 +28,7 @@ include_recipe "postgres::service"
 include_recipe "postgres::pg_pool2_server_support"
 
 # setup users
-include_recipe "postgres::pg_user"
+include_recipe "postgres::pg_user" unless node["postgres"]["cluster"]["slave"]
 
 # setup databases
 include_recipe "postgres::pg_database"
