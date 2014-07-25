@@ -84,7 +84,7 @@ unix_socket_directory = '<%= node["postgres"]["unix_socket_directory"] %>'   # (
 ssl = <%= node["postgres"]["ssl"] %>        # (change requires restart)
 #ssl_ciphers = '<%= node["postgres"]["ssl_ciphers"] %>'  # allowed SSL ciphers
           # (change requires restart)
-#ssl_renegotiation_limit = <%= node["postgres"]["ssl_renegotiation_limit"] %>  # amount of data between renegotiations
+ssl_renegotiation_limit = <%= node["postgres"]["ssl_renegotiation_limit"] %>  # amount of data between renegotiations
 <% if node["postgres"]["version"].to_f > 9.1 %>
 ssl_cert_file = '<%= node["postgres"]["ssl_cert_file"] %>' # (change requires restart)
 ssl_key_file = '<%= node["postgres"]["ssl_key_file"] %>'   # (change requires restart)
