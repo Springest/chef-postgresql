@@ -9,6 +9,9 @@ cookbook_file "/etc/apt/preferences.d/pgdg.pref" do
   source "pgdg.pref"
 end
 
+# Create the cache path
+execute "mkdir -p #{node["postgres"]["cache_path"]}"
+
 case node["platform"]
 when "ubuntu"
   include_recipe "postgres::apt_repository"

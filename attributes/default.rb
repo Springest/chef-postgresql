@@ -372,3 +372,4 @@ default["postgres"]["custom_variable_classes"]         = ""
 default["postgres"]["cluster"]["slave"]                = false
 default["postgres"]["cluster"]["weight"]               = 1
 
+default["postgres"]["cache_path"]                      = "/var/chef/cache"
