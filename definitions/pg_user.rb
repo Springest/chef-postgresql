@@ -20,7 +20,7 @@ define :pg_user, :action => :create do
 
     sql = sql.join ' '
 
-    exists = ["psql -c \"SELECT usename FROM pg_user WHERE usename='#{params[:name]}'\""]
+    exists = ["psql -c '\\du'"]
     exists.push "| grep #{params[:name]}"
     exists = exists.join ' '
 
