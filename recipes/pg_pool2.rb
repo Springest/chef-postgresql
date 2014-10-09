@@ -39,11 +39,11 @@ template "/etc/pgpool2/pgpool.conf" do
   owner "postgres"
   action :create
   mode "0644"
-  notifies :reload, 'service[pgpool2]'
+  notifies :restart, 'service[pgpool2]'
 end
 
 service "pgpool2" do
-  supports :restart => true, :status => true, :reload => true
+  supports :restart => true
   action [:enable, :start]
 end
 
