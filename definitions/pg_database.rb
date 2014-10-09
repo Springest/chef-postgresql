@@ -46,7 +46,7 @@ define :pg_database, :action => :create do
     createfunc.push "-U #{defaults[:username]}" if defaults[:username]
     createfunc.push "--host #{defaults[:host]}" if defaults[:host]
     createfunc.push "--port #{defaults[:port]}" if defaults[:port]
-    createfunc.push "-W -f /var/chef_file_cache/pgpool-recovery.sql #{params[:name]}"
+    createfunc.push "-W -f #{node["chef_client"]["cache_path"]}/pgpool-recovery.sql #{params[:name]}"
     createfunc = createfunc.join ' '
 
     execute "create pgpool2 recovery functions on #{params[:name]}" do
@@ -58,7 +58,7 @@ define :pg_database, :action => :create do
     createfunc.push "-U #{defaults[:username]}" if defaults[:username]
     createfunc.push "--host #{defaults[:host]}" if defaults[:host]
     createfunc.push "--port #{defaults[:port]}" if defaults[:port]
-    createfunc.push "-W -f /var/chef_file_cache/pgpool-regclass.sql #{params[:name]}"
+    createfunc.push "-W -f #{node["chef_client"]["cache_path"]}/pgpool-regclass.sql #{params[:name]}"
     createfunc = createfunc.join ' '
 
     execute "create pgpool2 regclass functions on #{params[:name]}" do

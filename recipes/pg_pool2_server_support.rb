@@ -1,6 +1,6 @@
 package "postgresql-#{node["postgres"]["version"]}-pgpool2"
 
-template "/var/chef_file_cache/pgpool-regclass.sql" do
+template "#{node["chef_client"]["cache_path"]}/pgpool-regclass.sql" do
   source "pgpool-regclass.sql.erb"
   owner "postgres"
   action :create
@@ -8,11 +8,11 @@ template "/var/chef_file_cache/pgpool-regclass.sql" do
 end
 
 execute "create-pgpool-regclass" do
-  command "psql -f /var/chef_file_cache/pgpool-regclass.sql template1"
+  command "psql -f #{node["chef_client"]["cache_path"]}/pgpool-regclass.sql template1"
   user "postgres"
 end
 
-template "/var/chef_file_cache/pgpool-recovery.sql" do
+template "#{node["chef_client"]["cache_path"]}/pgpool-recovery.sql" do
   source "pgpool-recovery.sql.erb"
   owner "postgres"
   action :create
@@ -20,19 +20,19 @@ template "/var/chef_file_cache/pgpool-recovery.sql" do
 end
 
 execute "create-pgpool-recovery" do
-  command "psql -f /var/chef_file_cache/pgpool-recovery.sql template1"
+  command "psql -f #{node["chef_client"]["cache_path"]}/pgpool-recovery.sql template1"
   user "postgres"
   action :nothing
 end
 
-cookbook_file "/var/chef_file_cache/insert_lock.sql" do
+cookbook_file "#{node["chef_client"]["cache_path"]}/insert_lock.sql" do
   owner "postgres"
   action :create
   notifies :run, 'execute[create-pgpool-insert-lock]', :immediately
 end
 
 execute "create-pgpool-insert-lock" do
-  command "psql -f /var/chef_file_cache/insert_lock.sql template1"
+  command "psql -f #{node["chef_client"]["cache_path"]}/insert_lock.sql template1"
   user "postgres"
   action :nothing
 end
