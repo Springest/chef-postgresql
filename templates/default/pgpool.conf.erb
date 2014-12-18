@@ -133,7 +133,7 @@ child_max_connections = 0
 connection_life_time = <%= node['postgres']['pgpool2']['connection_life_time'] %>
                                    # Connection to backend closes after being idle for this many seconds
                                    # 0 means no close
-client_idle_limit = 0
+client_idle_limit = <%= node['postgres']['pgpool2']['client_idle_limit'] %>
                                    # Client is disconnected after being idle for that many seconds
                                    # (even inside an explicit transactions!)
                                    # 0 means no disconnection
