@@ -195,7 +195,7 @@ default["postgis"]["version"]                            = "1.5"
 #------------------------------------------------------------------------------
 # FILE LOCATIONS
 #------------------------------------------------------------------------------
-default["postgres"]["data_directory"]                  = "/var/lib/postgresql/#{node["postgres"]["version"]}/main"
+default["postgres"]["data_directory"]                  = "/data/postgresql/#{node["postgres"]["version"]}/main"
 default["postgres"]["hba_file"]                        = "/etc/postgresql/#{node["postgres"]["version"]}/main/pg_hba.conf"
 default["postgres"]["ident_file"]                      = "/etc/postgresql/#{node["postgres"]["version"]}/main/pg_ident.conf"
 default["postgres"]["external_pid_file"]               = "/var/run/postgresql/#{node["postgres"]["version"]}-main.pid"

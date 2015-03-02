@@ -50,7 +50,7 @@ template "/etc/postgresql/#{pg_version}/main/postgresql.conf" do
   group  "postgres"
   mode   "0644"
   variables(:configuration => node["postgres"]["conf"])
-  notifies :restart, "service[postgresql]"
+  notifies :reload, "service[postgresql]"
 end
 
 # start

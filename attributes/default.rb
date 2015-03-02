@@ -28,7 +28,8 @@ default["postgis"]["version"]                            = "1.5"
 #------------------------------------------------------------------------------
 # FILE LOCATIONS
 #------------------------------------------------------------------------------
-default["postgres"]["data_directory"]                  = "/var/lib/postgresql/#{node["postgres"]["version"]}/main"
+default["postgres"]["data_directory"]                  = "/data/postgresql/#{node["postgres"]["version"]}/main"
+default["postgres"]["archive_directory"]               = "/data/postgresql/#{node["postgres"]["version"]}/archive"
 default["postgres"]["hba_file"]                        = "/etc/postgresql/#{node["postgres"]["version"]}/main/pg_hba.conf"
 default["postgres"]["ident_file"]                      = "/etc/postgresql/#{node["postgres"]["version"]}/main/pg_ident.conf"
 default["postgres"]["external_pid_file"]               = "/var/run/postgresql/#{node["postgres"]["version"]}-main.pid"
@@ -128,7 +129,7 @@ default["postgres"]["checkpoint_warning"]              = "30s"
 
 # archiving
 default["postgres"]["archive_mode"]                    = "off"
-default["postgres"]["archive_command"]                 = ""
+default["postgres"]["archive_command"]                 = "test ! -f #{node["postgres"]["archive_directory"]}/%f && cp %p #{node["postgres"]["archive_directory"]}/%f"
 default["postgres"]["archive_timeout"]                 = 0
 
 
@@ -363,3 +364,12 @@ default["postgres"]["databases"]                       = []
 #------------------------------------------------------------------------------
 
 default["postgres"]["custom_variable_classes"]         = ""
+
+#------------------------------------------------------------------------------
+# CLUSTER OPTIONS
+#------------------------------------------------------------------------------
+
+default["postgres"]["cluster"]["slave"]                = false
+default["postgres"]["cluster"]["weight"]               = 1
+
+default["postgres"]["cache_path"]                      = "/var/chef/cache"

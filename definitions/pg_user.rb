@@ -20,7 +20,7 @@ define :pg_user, :action => :create do
 
     sql = sql.join ' '
 
-    exists = ["psql -c \"SELECT usename FROM pg_user WHERE usename='#{params[:name]}'\""]
+    exists = ["psql -c '\\du'"]
     exists.push "| grep #{params[:name]}"
     exists = exists.join ' '
 
@@ -40,6 +40,7 @@ define :pg_user, :action => :create do
       params[:grants].each do |grant|
         privileges = grant["privileges"].kind_of?(Array) ? grant["privileges"].join(", ") : grant["privileges"]
         grant_type = grant["type"]
+        schema = grant["schema"] || "public"
 
         if grant_type == "schema"
           execute("GRANT #{privileges} ON #{grant["schema"]} TO #{params[:name]}") do
@@ -48,12 +49,9 @@ define :pg_user, :action => :create do
           end
         elsif grant_type == "table"
           if grant["all_tables"] == true
-            ruby_block "grant all tables of database #{grant["database"]} to user #{params[:name]}" do
-              block do
-                cmd = %Q{su postgres -c 'psql -d #{grant["database"]} -t -c "GRANT #{privileges} ON ALL TABLES IN SCHEMA public TO #{params[:name]};"'}
-                output = `#{cmd}`
-                Chef::Application.fatal!("Grant #{privileges} on all tables failed for user #{params[:name]}") if $?.exitstatus != 0
-              end
+            execute("GRANT #{privileges} ON ALL TABLES IN SCHEMA #{schema} TO #{params[:name]} for database #{grant["database"]}") do
+              user "postgres"
+              command "psql -d #{grant["database"]} -t -c 'GRANT #{privileges} ON ALL TABLES IN SCHEMA #{schema} TO #{params[:name]};'"
             end
           else # Not all tables
             grant["tables"].each do |table|
@@ -61,6 +59,21 @@ define :pg_user, :action => :create do
                 user "postgres"
                 command %Q{psql -d #{grant["database"]} -t -c "GRANT #{privileges} ON TABLE #{table} TO #{params[:name]};"}
                 only_if { %Q{psql -d #{grant["database"]} -t -c "\dt" | grep #{table} | wc -l}.to_i > 0 }
+              end
+            end
+          end
+        elsif grant_type == "sequence"
+          if grant["all_sequences"] == true
+            execute("GRANT #{privileges} ON ALL SEQUENCES IN SCHEMA #{schema} TO #{params[:name]}") do
+              user "postgres"
+              command "psql -d #{grant["database"]} -t -c 'GRANT #{privileges} ON ALL SEQUENCES IN SCHEMA #{schema} TO #{params[:name]};'"
+            end
+          else # Not all sequences
+            grant["sequences"].each do |sequence|
+              execute "Granting #{privileges} on sequence #{sequence} to #{params[:name]}" do
+                user "postgres"
+                command %Q{psql -d #{grant["database"]} -t -c "GRANT #{privileges} ON SEQUENCE #{sequence} TO #{params[:name]};"}
+                only_if { %Q{psql -d #{grant["database"]} -t -c "\ds" | grep #{sequence} | wc -l}.to_i > 0 }
               end
             end
           end

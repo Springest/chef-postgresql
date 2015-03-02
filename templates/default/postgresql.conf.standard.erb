@@ -65,7 +65,11 @@ max_connections = <%= node["postgres"]["max_connections"] %>     # (change requi
 # Note:  Increasing max_connections costs ~400 bytes of shared memory per
 # connection slot, plus lock space (see max_locks_per_transaction).
 #superuser_reserved_connections = <%= node["postgres"]["superuser_reserved_connections"] %> # (change requires restart)
+<% if node["postgres"]["version"] == "9.3" %>
+unix_socket_directories = '<%= node["postgres"]["unix_socket_directory"] %>'   # (change requires restart)
+<% else %>
 unix_socket_directory = '<%= node["postgres"]["unix_socket_directory"] %>'   # (change requires restart)
+<% end %>
 #unix_socket_group = '<%= node["postgres"]["unix_socket_group"] %>'     # (change requires restart)
 #unix_socket_permissions = <%= node["postgres"]["unix_socket_permissions"] %>   # begin with 0 to use octal notation
           # (change requires restart)
@@ -80,7 +84,7 @@ unix_socket_directory = '<%= node["postgres"]["unix_socket_directory"] %>'   # (
 ssl = <%= node["postgres"]["ssl"] %>        # (change requires restart)
 #ssl_ciphers = '<%= node["postgres"]["ssl_ciphers"] %>'  # allowed SSL ciphers
           # (change requires restart)
-#ssl_renegotiation_limit = <%= node["postgres"]["ssl_renegotiation_limit"] %>  # amount of data between renegotiations
+ssl_renegotiation_limit = <%= node["postgres"]["ssl_renegotiation_limit"] %>  # amount of data between renegotiations
 <% if node["postgres"]["version"].to_f > 9.1 %>
 ssl_cert_file = '<%= node["postgres"]["ssl_cert_file"] %>' # (change requires restart)
 ssl_key_file = '<%= node["postgres"]["ssl_key_file"] %>'   # (change requires restart)
@@ -182,7 +186,7 @@ checkpoint_completion_target = <%= node["postgres"]["checkpoint_completion_targe
 
 # - Archiving -
 
-<% if node["postgres"]["replication"].any? %>
+<% if node["postgres"]["replication"].any? || node["postgres"]["archive_mode"] == 'on' %>
 archive_mode = <%= node["postgres"]["archive_mode"] %>   # allows archiving to be done (change requires restart)
 archive_command = '<%= node["postgres"]["archive_command"] %>'   # command to use to archive a logfile segment
 archive_timeout = <%= node["postgres"]["archive_timeout"] %>    # force a logfile segment switch after this number of seconds; 0 disables
@@ -201,7 +205,11 @@ max_wal_senders = <%= node["postgres"]["max_wal_senders"] %>    # max number of 
 # wal_sender_delay = <%= node["postgres"]["wal_sender_delay"] %>    # walsender cycle time, 1-10000 milliseconds
 wal_keep_segments = <%= node["postgres"]["wal_keep_segments"] %>    # in logfile segments, 16MB each; 0 disables
 vacuum_defer_cleanup_age = <%= node["postgres"]["vacuum_defer_cleanup_age"] %> # number of xacts by which cleanup is delayed
+<% if node["postgres"]["version"] == "9.3" %>
+wal_sender_timeout = <%= node["postgres"]["replication_timeout"] %>  # in milliseconds; 0 disables
+<% else %>
 replication_timeout = <%= node["postgres"]["replication_timeout"] %>  # in milliseconds; 0 disables
+<% end %>
 synchronous_standby_names = '<%= node["postgres"]["synchronous_standby_names"] %>' # standby servers that provide sync rep
 # comma-separated list of application_name
 # from standby(s); '*' = all
@@ -376,7 +384,7 @@ default_statistics_target = <%= node["postgres"]["default_statistics_target"] %>
 #log_duration = <%= node["postgres"]["log_duration"] %>
 #log_error_verbosity = <%= node["postgres"]["log_error_verbosity"] %>    # terse, default, or verbose messages
 #log_hostname = <%= node["postgres"]["log_hostname"] %>
-#log_line_prefix = '<%= node["postgres"]["log_line_prefix"] %>'     # special values:
+log_line_prefix = '<%= node["postgres"]["log_line_prefix"] %>'     # special values:
           #   %a = application name
           #   %u = user name
           #   %d = database name

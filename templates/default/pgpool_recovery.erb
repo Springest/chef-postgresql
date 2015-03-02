@@ -1,0 +1,69 @@
+#!/bin/sh
+
+# First stage of recovery
+
+PSQL=/usr/bin/psql
+SCP=/usr/bin/scp
+SSH=/usr/bin/ssh
+LOGGER="log /var/log/postgresql/pgpool_recovery.log"
+#"/usr/bin/logger -i -p local0.info -t pgpool"
+RSYNC="/usr/bin/rsync --archive --quiet --rsh=$SSH --delete"
+BASENAME=`/usr/bin/basename $0`
+HOSTNAME=`/bin/hostname -f`
+ID=`/usr/bin/id -un`
+
+# $1 = Database cluster path of a master node.
+# $2 = Hostname of a recovery target node.
+# $3 = Database cluster path of a recovery target node.
+
+#PG_HOME=/var/lib/postgresql
+SRC_ARCHIVE_LOG_DIR=<%= node["postgres"]["archive_directory"] %>
+
+SRC_DATA=$1
+DST_HOST=$2
+DST_DATA=$3
+
+SRC_DBNAME=postgres
+SRC_PORT=<%= node["postgres"]['port'] %>
+
+log()
+{
+echo $(date +"%D %T") $2 >> $1
+}
+
+$LOGGER "Executing $BASENAME as user $ID"
+
+$LOGGER "Executing pg_start_backup"
+$PSQL -p $SRC_PORT -d $SRC_DBNAME -c "select pg_start_backup('pgpool-recovery')"
+
+$LOGGER "Creating recovery template"
+echo "standby_mode = 'on'" > $SRC_DATA/recovery.template
+RESTCMD="restore_command = '$SCP $HOSTNAME:$SRC_ARCHIVE_LOG_DIR/%f %p'"
+echo $RESTCMD >> $SRC_DATA/recovery.template
+CONNINFO="primary_conninfo = 'host=$HOSTNAME port=$SRC_PORT user=<%= node["postgres"]['replication']['user'] %> password=<%= node["postgres"]["replication"]["password"] %>'"
+echo $CONNINFO >> $SRC_DATA/recovery.template
+echo "trigger_file = '/tmp/pg_failover_trigger'" >> $SRC_DATA/recovery.template
+
+$LOGGER "Rsyncing directory base"
+$RSYNC $SRC_DATA/base/ $DST_HOST:$DST_DATA/base/
+$LOGGER "Rsyncing directory global"
+$RSYNC $SRC_DATA/global/ $DST_HOST:$DST_DATA/global/
+$LOGGER "Rsyncing directory pg_clog"
+$RSYNC $SRC_DATA/pg_clog/ $DST_HOST:$DST_DATA/pg_clog/
+$LOGGER "Rsyncing directory pg_multixact"
+$RSYNC $SRC_DATA/pg_multixact/ $DST_HOST:$DST_DATA/pg_multixact/
+$LOGGER "Rsyncing directory pg_subtrans"
+$RSYNC $SRC_DATA/pg_subtrans/ $DST_HOST:$DST_DATA/pg_subtrans/
+$LOGGER "Rsyncing directory pg_tblspc"
+$RSYNC $SRC_DATA/pg_tblspc/ $DST_HOST:$DST_DATA/pg_tblspc/
+$LOGGER "Rsyncing directory pg_twophase"
+$RSYNC $SRC_DATA/pg_twophase/ $DST_HOST:$DST_DATA/pg_twophase/
+$LOGGER "Rsyncing directory pg_xlog"
+$RSYNC $SRC_DATA/pg_xlog/ $DST_HOST:$DST_DATA/pg_xlog/
+$LOGGER "Rsyncing file recovery.conf (with source deletion)"
+$RSYNC --remove-source-files $SRC_DATA/recovery.template $DST_HOST:$DST_DATA/recovery.conf
+
+$LOGGER "Executing pg_stop_backup"
+$PSQL -p $SRC_PORT -d $SRC_DBNAME -c 'select pg_stop_backup()'
+
+exit 0
