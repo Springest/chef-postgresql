@@ -166,7 +166,7 @@ log_statement = off
 log_per_node_statement = off
                                    # Log all statements
                                    # with node and backend informations
-log_standby_delay = 'none'
+log_standby_delay = '<%= node['postgres']['pgpool2']['log_standby_delay'] %>'
                                    # Log standby delay
                                    # Valid values are combinations of always,
                                    # if_over_threshold, none
@@ -289,7 +289,7 @@ master_slave_sub_mode = 'stream'
 
 # - Streaming -
 
-sr_check_period = 0
+sr_check_period = <%= node["postgres"]["pgpool2"]["sr_check_period"] || '0' >
                                    # Streaming replication check period
                                    # Disabled (0) by default
 sr_check_user = '<%= node["postgres"]["replication"]["user"] %>'
@@ -299,14 +299,14 @@ sr_check_user = '<%= node["postgres"]["replication"]["user"] %>'
                                    # sr_check_period = 0
 sr_check_password = '<%= node["postgres"]["replication"]["password"] %>'
                                    # Password for streaming replication check user
-delay_threshold = 0
+delay_threshold = <%= node["postgres"]["pgpool2"]["delay_threshold"] || '0' >
                                    # Threshold before not dispatching query to standby node
                                    # Unit is in bytes
                                    # Disabled (0) by default
 
 # - Special commands -
 
-follow_master_command = ''
+follow_master_command = '/usr/sbin/pgpool_failover %d %h %p %D %m %H %M %P'
                                    # Executes this command after master failover
                                    # Special values:
                                    #   %d = node id
@@ -371,7 +371,7 @@ health_check_password = '<%= node["postgres"]["pgpool2"]["users"]["postgres"] %>
 # FAILOVER AND FAILBACK
 #------------------------------------------------------------------------------
 
-failover_command = ''
+failover_command = '/usr/sbin/pgpool_failover %d %h %p %D %m %H %M %P'
                                    # Executes this command at failover
                                    # Special values:
                                    #   %d = node id

@@ -68,3 +68,9 @@ template "/usr/sbin/pgpool_remote_start" do
   group "postgres"
   mode "0755"
 end
+
+template "/usr/sbin/pgpool_failover" do
+  owner "postgres"
+  group "postgres"
+  mode "0755"
+end
