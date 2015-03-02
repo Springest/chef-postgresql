@@ -30,10 +30,11 @@ log()
 echo $(date +"%D %T") $2 >> $1
 }
 
-if [ $failed_node_id = $old_primary_node_id ]; then  # master failed
+if [ $failed_node_id = $old_primary_node_id ]; then  # I was the master and I failed, but now I'm back
   $LOGGER "Executing $BASENAME as user $ID"
-  $LOGGER "Triggering failover on remote PostgreSQL server with hostname $new_master_host_name"
-  $SSH -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $new_master_host_name $trigger_cmd
-  $SSH -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $new_master_host_name rm -f $failed_db_cluster/recovery.conf
-  $LOGGER "Remote PostgeSQL failover triggered on $new_master_host_name."
+  $LOGGER "Triggering failback on remote PostgreSQL server with hostname $failed_host_name"
+  /usr/sbin/pcp_detach_node 10 localhost 9898 postgres <%= node["postgres"]["pgpool2"]["users"]["postgres"] %> $failed_node_id
+  /usr/sbin/pgpool_remote_stop $failed_host_name $failed_db_cluster
+  /usr/sbin/pcp_recovery_node 172800 localhost 9898 postgres <%= node["postgres"]["pgpool2"]["users"]["postgres"] %> $failed_node_id
+  $LOGGER "Remote PostgeSQL failback finished on $failed_host_name. Welcome back."
 fi
