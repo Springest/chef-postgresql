@@ -18,6 +18,15 @@ new_master_host_name=$6
 old_master_id=$7
 old_primary_node_id=$8
 
+echo "failed_node_id=$1"
+echo "failed_host_name=$2"
+echo "failed_port=$3"
+echo "failed_db_cluster=$4"
+echo "new_master_id=$5"
+echo "new_master_host_name=$6"
+echo "old_master_id=$7"
+echo "old_primary_node_id=$8"
+
 SSH=/usr/bin/ssh
 LOGGER="log /var/log/postgresql/pgpool_failover.log"
 trigger_cmd="/usr/bin/pg_ctlcluster promote"
