@@ -20,7 +20,7 @@ old_primary_node_id=$8
 
 SSH=/usr/bin/ssh
 LOGGER="log /var/log/postgresql/pgpool_failover.log"
-trigger_cmd="/usr/bin/pg_ctlcluster promote"
+trigger_cmd="touch /tmp/pg_failover_trigger"
 
 BASENAME=`/usr/bin/basename $0`
 ID=`/usr/bin/id -un`

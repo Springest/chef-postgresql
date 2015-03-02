@@ -42,6 +42,7 @@ RESTCMD="restore_command = '$SCP $HOSTNAME:$SRC_ARCHIVE_LOG_DIR/%f %p'"
 echo $RESTCMD >> $SRC_DATA/recovery.template
 CONNINFO="primary_conninfo = 'host=$HOSTNAME port=$SRC_PORT user=<%= node["postgres"]['replication']['user'] %> password=<%= node["postgres"]["replication"]["password"] %>'"
 echo $CONNINFO >> $SRC_DATA/recovery.template
+echo "trigger_file = '/tmp/pg_failover_trigger'" >> $SRC_DATA/recovery.template
 
 $LOGGER "Rsyncing directory base"
 $RSYNC $SRC_DATA/base/ $DST_HOST:$DST_DATA/base/
